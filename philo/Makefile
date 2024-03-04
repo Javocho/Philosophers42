@@ -6,13 +6,13 @@
 #    By: fcosta-f <fcosta-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/04 21:58:41 by fcosta-f          #+#    #+#              #
-#    Updated: 2024/03/04 21:58:47 by fcosta-f         ###   ########.fr        #
+#    Updated: 2024/03/04 22:01:10 by fcosta-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRCS 	= main.c ft_atol.c validation.c init.c time.c \
+SRCS 	= main.c utils.c validation.c init.c time.c \
 			output.c garbage_collector.c mutex.c \
 			routine_finish.c routine_dining.c
 
