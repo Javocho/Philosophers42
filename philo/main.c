@@ -6,64 +6,63 @@
 /*   By: fcosta-f <fcosta-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 20:47:36 by fcosta-f          #+#    #+#             */
-/*   Updated: 2024/03/04 20:59:53 by fcosta-f         ###   ########.fr       */
+/*   Updated: 2024/03/04 21:55:24 by fcosta-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "philo.h"
 
-static void	end_dining(t_table *table);
-static bool	start_dining(t_table *table);
+static void	end_dining(t_all *all);
+static bool	start_dining(t_all *all);
 
 int	main(int argc, char **argv)
 {
-	t_table	*table;
+	t_all	*all;
 
-	table = NULL;
+	all = NULL;
 	if (is_valid_args(argc, argv) == false)
 		return (EXIT_FAILURE);
-	table = init_table(argc, argv);
-	if (!table)
+	all = init_all(argc, argv);
+	if (!all)
 		return (EXIT_FAILURE);
-	if (start_dining(table) == false)
+	if (start_dining(all) == false)
 		return (EXIT_FAILURE);
-	end_dining(table);
+	end_dining(all);
 	return (EXIT_SUCCESS);
 }
 
-static void	end_dining(t_table *table)
+static void	end_dining(t_all *all)
 {
 	int	i;
 
 	i = 0;
-	while (i < table->nbr_philo)
+	while (i < all->nbr_philo)
 	{
-		pthread_join(table->philo[i]->thread_philo, NULL);
+		pthread_join(all->philo[i]->thread_philo, NULL);
 		i++;
 	}
-	if (table->nbr_philo > 1)
-		pthread_join(table->thread_table, NULL);
-	free_table(table);
+	if (all->nbr_philo > 1)
+		pthread_join(all->thread_all, NULL);
+	free_all(all);
 }
 
-static bool	start_dining(t_table *table)
+static bool	start_dining(t_all *all)
 {
 	int	i;
 
 	i = 0;
-	while (i < table->nbr_philo)
+	while (i < all->nbr_philo)
 	{
-		if (pthread_create(&table->philo[i]->thread_philo, NULL,
-				&dining_routines, table->philo[i]) != 0)
-			return (error_msg_null("Error: Could not create thread.\n", table));
+		if (pthread_create(&all->philo[i]->thread_philo, NULL,
+				&dining_routines, all->philo[i]) != 0)
+			return (error_msg_null("Error: Could not create thread.\n", all));
 		i++;
 	}
-	if (table->nbr_philo > 1)
+	if (all->nbr_philo > 1)
 	{
-		if (pthread_create(&table->thread_table, NULL, &finish_routines_reached,
-				table) != 0)
-			return (error_msg_null("Error: Could not create thread.\n", table));
+		if (pthread_create(&all->thread_all, NULL, &finish_routines,
+				all) != 0)
+			return (error_msg_null("Error: Could not create thread.\n", all));
 	}
 	return (true);
 }

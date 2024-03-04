@@ -3,99 +3,42 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rlins <rlins@student.42sp.org.br>          +#+  +:+       +#+         #
+#    By: fcosta-f <fcosta-f@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/01/23 08:04:25 by rlins             #+#    #+#              #
-#    Updated: 2024/03/04 19:49:41 by fcosta-f         ###   ########.fr        #
+#    Created: 2024/03/04 21:58:41 by fcosta-f          #+#    #+#              #
+#    Updated: 2024/03/04 21:58:47 by fcosta-f         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-# Collors
-RESET 	= \033[0m
-GREEN 	= \033[0;32m
-RED 	= \033[0;31m
-
-OBJ_DIR	=	obj
-
-# Compilation
-# CC = gcc -lpthread
-CC = gcc -pthread
-
-# Compilation flags
-CFLAGS = -g -fsanitize=thread # Warning datarace. Don't work with valgrind
-# CFLAGS = -g -Wall -Werror -Wextra -D PRETTY=1 #PRETTY log info
-#CFLAGS = -g -Wall -Werror -Wextra #Normal Execution
-
-#Check Leak memory
-LEAK = valgrind --leak-check=full --show-leak-kinds=all \
-	--trace-children=yes --track-origins=yes -s
-
-# Thread error detections:
-HEL_GRIND = valgrind --tool=helgrind
-
-RM		= rm -rf
-
-SRCS 	= main.c ft_ato_long.c validation.c init.c error.c time.c \
+SRCS 	= main.c ft_atol.c validation.c init.c time.c \
 			output.c garbage_collector.c mutex.c \
 			routine_finish.c routine_dining.c
 
-OBJS	= $(SRCS:%.c=$(OBJ_DIR)/%.o)
+CC = cc 
+RM = rm -f
+CFLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
 
-all: $(NAME)
+%.o: %.c philo.h Makefile
+		${CC} ${CFLAGS} -c $< -o $@	
 
-$(NAME): $(OBJ_DIR) $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
-	@echo "$(GREEN)Build Successful$(RESET)"
+OBJS = ${SRCS:.c=.o}
 
-$(OBJ_DIR)/%.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+all: 
+		$(MAKE) ${NAME}
 
-$(OBJ_DIR):
-	@mkdir -p $@
+${NAME}:: ${OBJS} $(LIBFT) Makefile
+		${CC} $(CFLAGS) $(OBJS) -o ${NAME}
 
 clean:
-	@echo "$(RED)Cleaning objects...$(RESET)"
-	@$(RM) obj
-	@echo "$(GREEN)Done!$(RESET)"
+		${RM} ${OBJS} 
 
-fclean: clean
-	@echo  "$(RED)Cleaning all...$(RESET)"
-	@$(RM) $(NAME)
-	@echo "$(RED)Cleaning binaries...$(RESET)"
-	@echo "$(GREEN)Done!$(RESET)"
+fclean: clean 
+		${RM} ${OBJS} ${NAME}
 
-re: fclean all
+re: 
+		$(MAKE) fclean 
+		$(MAKE) all
 
-bonus: all
-
-rebonus: fclean all
-
-run: $(NAME)
-#	@./$(NAME) 1 800 200 200
-#	@./$(NAME) 5 800 200 200
-	@./$(NAME) 5 800 200 200 7
-#	@./$(NAME) 5 800 200 200 7 | grep 'is eating'
-#	@./$(NAME) 4 410 200 200
-#	@./$(NAME) 4 310 200 100
-#	@./$(NAME) 2 310 200 100
-
-#	@./$(NAME) 3 8100 2000 2000 2
-#	@./$(NAME) 2 4100 2000 2000 2
-#	@./$(NAME) 4 410 200 200 5
-#	@./$(NAME) 4 410 200 200
-#	@./$(NAME) 2 800 200 200 2
-#	@./$(NAME) 2 60 60 60
-
-# I'm not sure if Valgrind without helgrind tool is a good idea to execute...
-valgrind:
-	$(LEAK) ./$(NAME) 1 800 200 200
-#	$(LEAK) ./$(NAME) 2 60 60 60
-
-helgrind:
-	$(HEL_GRIND) ./$(NAME) 2 8100 2000 2000 1
-#	$(HEL_GRIND) ./$(NAME) 1 800 200 200
-#	$(HEL_GRIND) ./$(NAME) 2 60 60 60
-
-.PHONY: all run re clean fclean
+.PHONY: all clean fclean re

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ato_long.c                                      :+:      :+:    :+:   */
+/*   ft_atol.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fcosta-f <fcosta-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,12 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "philo.h"
 
 static int	ft_isspace(int c);
 
-long	ft_ato_long(const char *str)
+long	ft_atol(const char *str)
 {
 	unsigned long long	num;
 	int					neg;

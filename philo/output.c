@@ -6,22 +6,22 @@
 /*   By: fcosta-f <fcosta-f@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/04 20:47:42 by fcosta-f          #+#    #+#             */
-/*   Updated: 2024/03/04 20:55:03 by fcosta-f         ###   ########.fr       */
+/*   Updated: 2024/03/04 21:58:00 by fcosta-f         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
 static char	*parse_status(t_state status);
 
-void	log_status(t_philo *philo, t_state status)
+void	show_status(t_philo *philo, t_state status)
 {
-	if (has_dinner_finish(philo->table) == true)
+	if (has_dinner_finish(philo->all) == true)
 		return ;
-	pthread_mutex_lock(&philo->table->log_lock);
-	printf("%i %ld %s\n", get_time_ms(philo->table->start_dining), philo->id + 1, parse_status(status));
-	pthread_mutex_unlock(&philo->table->log_lock);
+	pthread_mutex_lock(&philo->all->output_lock);
+	printf("%i %ld %s\n", get_time_ms(philo->all->start_dining), \
+	philo->id + 1, parse_status(status));
+	pthread_mutex_unlock(&philo->all->output_lock);
 }
 
 static char	*parse_status(t_state status)
